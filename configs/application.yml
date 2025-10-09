@@ -6,4 +6,4 @@ Logging:
 
 OTEL_EXPORTER_OTLP_ENDPOINT: https://otlp-gateway-prod-sa-east-1.grafana.net/otlp
 OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
-OTEL_RESOURCE_ATTRIBUTES: deployment.environment=Production,service.instance.id=${OTEL_SERVICE_NAME}
+OTEL_RESOURCE_ATTRIBUTES: deployment.environment=Production,service.instance.id=${FLY_MACHINE_ID}
