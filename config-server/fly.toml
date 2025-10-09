@@ -1,10 +1,15 @@
-# fly.toml app configuration file generated for apiservice on 2025-10-09T01:22:21-03:00
+# fly.toml app configuration file generated for config-server-demo on 2025-10-09T19:25:41-03:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'config-server'
+app = 'config-server-demo'
 primary_region = 'gru'
+
+[env]
+  OTEL_SERVICE_NAME = 'config-server'
+  SPRING_CLOUD_CONFIG_SERVER_GIT_SEARCHPATHS = 'configs/'
+  SPRING_CLOUD_CONFIG_SERVER_GIT_URI = 'https://github.com/alefcarlos/flyio-demo'
 
 [http_service]
   internal_port = 8888
@@ -18,9 +23,3 @@ primary_region = 'gru'
   memory = '1gb'
   cpu_kind = 'shared'
   cpus = 1
-
-[env]
-  OTEL_EXPORTER_OTLP_ENDPOINT = 'https://otlp-gateway-prod-sa-east-1.grafana.net/otlp'
-  OTEL_EXPORTER_OTLP_PROTOCOL = 'http/protobuf'
-  ASPNETCORE_ENVIRONMENT = 'Production'
-  OTEL_SERVICE_NAME= 'apiservice'

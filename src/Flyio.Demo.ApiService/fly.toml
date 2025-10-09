@@ -20,7 +20,5 @@ primary_region = 'gru'
   cpus = 1
 
 [env]
-  OTEL_EXPORTER_OTLP_ENDPOINT = 'https://otlp-gateway-prod-sa-east-1.grafana.net/otlp'
-  OTEL_EXPORTER_OTLP_PROTOCOL = 'http/protobuf'
   ASPNETCORE_ENVIRONMENT = 'Production'
   OTEL_SERVICE_NAME= 'apiservice'
