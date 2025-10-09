@@ -1,9 +1,13 @@
 Logging:
-  LogLevel:
+  Console:
+    LogLevel:
+      Default: Warning
+  OpenTelemetry:
+    LogLevel:
     Microsoft\.AspNetCore: Warning
     Microsoft\.AspNetCore\.HttpLogging\.HttpLoggingMiddleware: Information
     System\.Net\.Http\.HttpClient\.OtlpMetricExporter: Warning
 
 OTEL_EXPORTER_OTLP_ENDPOINT: https://otlp-gateway-prod-sa-east-1.grafana.net/otlp
 OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
-OTEL_RESOURCE_ATTRIBUTES: deployment.environment=Production,service.instance.id=${FLY_MACHINE_ID}
+OTEL_RESOURCE_ATTRIBUTES: deployment.environment=${ASPNETCORE_ENVIRONMENT},service.instance.id=${FLY_MACHINE_ID}
