@@ -35,6 +35,11 @@ app.MapGet("/weatherforecast", () =>
 })
 .WithName("GetWeatherForecast");
 
+app.MapGet("/setting", (IConfiguration configuration, string key) =>
+{
+    return configuration[key];
+});
+
 app.MapDefaultEndpoints();
 
 app.Run();

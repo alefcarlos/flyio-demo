@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Configuration.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
@@ -7,6 +8,8 @@ using Microsoft.Extensions.ServiceDiscovery;
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
+using Steeltoe.Configuration.ConfigServer;
+using Steeltoe.Configuration.Placeholder;
 
 namespace Microsoft.Extensions.Hosting;
 
@@ -20,6 +23,8 @@ public static class Extensions
 
     public static TBuilder AddServiceDefaults<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
+        builder.ConfigureRemoteConfiguration();
+
         builder.ConfigureOpenTelemetry();
 
         builder.AddDefaultHealthChecks();
@@ -40,6 +45,42 @@ public static class Extensions
         // {
         //     options.AllowedSchemes = ["https"];
         // });
+
+        return builder;
+    }
+
+    public static TBuilder ConfigureRemoteConfiguration<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
+    {
+
+        var shouldUse = !string.IsNullOrWhiteSpace(builder.Configuration["spring:cloud:config:uri"]);
+
+        if (shouldUse)
+        {
+            var otelServiceName = builder.Configuration["OTEL_SERVICE_NAME"];
+
+            var memorySource = new MemoryConfigurationSource
+            {
+                InitialData = new Dictionary<string, string?>
+                {
+                    // Setup defaults for Spring Cloud Config
+                    { "spring:application:name", otelServiceName },
+                    // { "spring:cloud:config:uri", "http://pla-config-server.config:8888" },
+                    { "spring:cloud:config:failFast", "true" },
+                }
+            };
+
+            builder.Configuration.Sources.Insert(0, memorySource);
+
+            var loggerFactory = LoggerFactory.Create(loggingBuilder =>
+            {
+                loggingBuilder.AddConsole();
+                loggingBuilder.SetMinimumLevel(LogLevel.Debug);
+            });
+
+            builder.AddConfigServer(loggerFactory);
+
+            builder.Configuration.AddPlaceholderResolver();
+        }
 
         return builder;
     }

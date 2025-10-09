@@ -7,6 +7,10 @@
     <GlobalPackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15" />
     <GlobalPackageReference Include="MinVer" Version="6.0.0" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageVersion Include="Steeltoe.Configuration.ConfigServer" Version="4.0.0" />
+    <PackageVersion Include="Steeltoe.Configuration.Placeholder" Version="4.0.0" />
+  </ItemGroup>
   <!-- Aspire -->
   <ItemGroup>
     <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.5.1" />
