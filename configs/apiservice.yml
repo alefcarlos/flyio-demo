@@ -1,2 +1,2 @@
 Foo: Bar
-Bar: 'O valor é ${Foo}''
+Bar: 'O valor é ${Foo}'
