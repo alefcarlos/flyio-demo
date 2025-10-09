@@ -1,0 +1,26 @@
+# fly.toml app configuration file generated for apiservice on 2025-10-09T01:22:21-03:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'config-server'
+primary_region = 'gru'
+
+[http_service]
+  internal_port = 8888
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
+
+[env]
+  OTEL_EXPORTER_OTLP_ENDPOINT = 'https://otlp-gateway-prod-sa-east-1.grafana.net/otlp'
+  OTEL_EXPORTER_OTLP_PROTOCOL = 'http/protobuf'
+  ASPNETCORE_ENVIRONMENT = 'Production'
+  OTEL_SERVICE_NAME= 'apiservice'

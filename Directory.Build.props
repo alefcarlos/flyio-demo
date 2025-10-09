@@ -1,0 +1,23 @@
+<Project>
+
+    <PropertyGroup Label="General">
+        <TargetFramework>net9.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <SolutionDir Condition=" '$(SolutionDir)' == '' OR '$(SolutionDir)' == '*Undefined if not building a solution or within Visual Studio*' ">$(MSBuildThisFileDirectory)</SolutionDir>
+        <IsTestProject>$(MSBuildProjectName.EndsWith('.Tests'))</IsTestProject>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+        <GenerateComplianceReport>true</GenerateComplianceReport>
+        <UseArtifactsOutput>true</UseArtifactsOutput>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
+        <ContinuousIntegrationBuild Condition="'$(TF_BUILD)' == 'true'">true</ContinuousIntegrationBuild>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="$(MSBuildProjectName).Tests" />
+    </ItemGroup>
+
+</Project>
