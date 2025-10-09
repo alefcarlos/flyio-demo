@@ -1,2 +1,7 @@
+Logging:
+  LogLevel:
+    Microsoft\.AspNetCore: Warning
+    Microsoft\.AspNetCore\.HttpLogging\.HttpLoggingMiddleware: Information
+
 OTEL_EXPORTER_OTLP_ENDPOINT: https://otlp-gateway-prod-sa-east-1.grafana.net/otlp
 OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
