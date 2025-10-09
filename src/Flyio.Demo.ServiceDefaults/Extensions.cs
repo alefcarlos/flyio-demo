@@ -1,10 +1,11 @@
+using Flyio.Demo.ServiceDefaults;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.Extensions.Configuration.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.ServiceDiscovery;
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
@@ -24,6 +25,17 @@ public static class Extensions
     public static TBuilder AddServiceDefaults<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
         builder.ConfigureRemoteConfiguration();
+
+        if (builder is WebApplicationBuilder webbuilder)
+        {
+            webbuilder.ConfigureLogging();
+
+            // Add services to the container.
+            builder.Services.AddProblemDetails();
+
+            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+            builder.Services.AddOpenApi();
+        }
 
         builder.ConfigureOpenTelemetry();
 
@@ -48,6 +60,20 @@ public static class Extensions
 
         return builder;
     }
+
+    public static WebApplicationBuilder ConfigureLogging(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddHttpLogging(logging =>
+        {
+            logging.LoggingFields = HttpLoggingFields.RequestPropertiesAndHeaders | HttpLoggingFields.ResponsePropertiesAndHeaders | HttpLoggingFields.Duration;
+            logging.CombineLogs = true;
+        });
+
+        builder.Services.AddHttpLoggingInterceptor<FilterRequestLoggingInterceptor>();
+
+        return builder;
+    }
+
 
     public static TBuilder ConfigureRemoteConfiguration<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
@@ -140,8 +166,21 @@ public static class Extensions
         return builder;
     }
 
+    public static void UseProblemDetailsWithDefaults(this WebApplication app)
+    {
+        app.UseExceptionHandler();
+        app.UseStatusCodePages();
+
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+        }
+    }
+
     public static WebApplication MapDefaultEndpoints(this WebApplication app)
     {
+        app.MapOpenApi();
+
         // Adding health checks endpoints to applications in non-development environments has security implications.
         // See https://aka.ms/dotnet/aspire/healthchecks for details before enabling these endpoints in non-development environments.
 
