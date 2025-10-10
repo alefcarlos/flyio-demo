@@ -20,6 +20,6 @@ primary_region = 'gru'
   cpus = 1
 
 [env]
-  ASPNETCORE_ENVIRONMENT = 'Production'
   OTEL_SERVICE_NAME = 'apiservice'
-  spring__cloud__config__uri = 'https://config-server-demo.fly.dev'
+  ASPNETCORE_ENVIRONMENT = 'Production'
+  spring__cloud__config__uri = 'http://config-server-demo.internal:8888'

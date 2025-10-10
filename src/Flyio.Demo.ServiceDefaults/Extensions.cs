@@ -104,9 +104,9 @@ public static class Extensions
             });
 
             builder.AddConfigServer(loggerFactory);
-
-            builder.Configuration.AddPlaceholderResolver();
         }
+
+        builder.Configuration.AddPlaceholderResolver();
 
         return builder;
     }
