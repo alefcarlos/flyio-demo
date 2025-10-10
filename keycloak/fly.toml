@@ -1,0 +1,43 @@
+# fly.toml app configuration file generated for keycloak-demo on 2025-10-10T00:22:35-03:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'keycloak-demo'
+primary_region = 'gru'
+
+[build]
+
+[env]
+  KC_HOSTNAME = 'https://keycloak-demo.fly.dev'
+  KC_HTTP_ENABLED = 'true'
+  KC_DB = 'postgres'
+  KC_DB_URL = 'jdbc:postgresql://pgbouncer.dzx6qo6e62g0jpv5.flympg.net/keycloak'
+  KC_DB_USERNAME = 'fly-user'
+  KC_TRACING_SERVICE_NAME = 'keycloak-demo'
+  KC_TRACING_PROTOCOL = 'http/protobuf'
+  KC_TRACING_RESOURCE_ATTRIBUTES = 'deployment.environment=Production,service.instance.id=123'
+  KC_TRACING_ENDPOINT = 'https://otlp-gateway-prod-sa-east-1.grafana.net/otlp'
+
+[experimental]
+  cmd = ["start", "--optimized"]
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+  [[http_service.checks]]
+    grace_period = "30s"
+    interval = "60s"
+    method = "GET"
+    timeout = "5s"
+    path = "/health/ready"
+
+[[vm]]
+  memory = '2gb'
+  cpu_kind = 'shared'
+  cpus = 1
