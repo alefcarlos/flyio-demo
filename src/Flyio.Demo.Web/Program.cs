@@ -1,7 +1,9 @@
 using Flyio.Demo.Web;
 using Flyio.Demo.Web.Components;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args)
+    .AsBlazor()
+    ;
 
 // Add service defaults & Aspire client integrations.
 builder.AddServiceDefaults();

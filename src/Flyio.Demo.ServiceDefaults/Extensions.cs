@@ -14,6 +14,12 @@ using Steeltoe.Configuration.Placeholder;
 
 namespace Microsoft.Extensions.Hosting;
 
+public enum EEntrypointType
+{
+    WebApi,
+    Blazor
+}
+
 // Adds common Aspire services: service discovery, resilience, health checks, and OpenTelemetry.
 // This project should be referenced by each service project in your solution.
 // To learn more about using this project, see https://aka.ms/dotnet/aspire/service-defaults
@@ -21,20 +27,38 @@ public static class Extensions
 {
     private const string HealthEndpointPath = "/health";
     private const string AlivenessEndpointPath = "/alive";
+    private const string EntrypointType = nameof(EntrypointType);
+
+    public static TBuilder AsWebApi<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
+    {
+        builder.Properties[EntrypointType] = EEntrypointType.WebApi;
+
+        return builder;
+    }
+
+    public static TBuilder AsBlazor<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
+    {
+        builder.Properties[EntrypointType] = EEntrypointType.Blazor;
+
+        return builder;
+    }
 
     public static TBuilder AddServiceDefaults<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
         builder.ConfigureRemoteConfiguration();
 
-        if (builder is WebApplicationBuilder webbuilder)
+        if (builder is WebApplicationBuilder webBuilder)
         {
-            webbuilder.ConfigureLogging();
+            webBuilder.ConfigureLogging();
 
-            // Add services to the container.
-            builder.Services.AddProblemDetails();
+            if (builder.Properties[EntrypointType] is EEntrypointType.WebApi)
+            {
+                // Add services to the container.
+                builder.Services.AddProblemDetails();
 
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddOpenApi();
+                // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+                builder.Services.AddOpenApi();
+            }
         }
 
         builder.ConfigureOpenTelemetry();
@@ -77,7 +101,6 @@ public static class Extensions
 
     public static TBuilder ConfigureRemoteConfiguration<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
-
         var shouldUse = !string.IsNullOrWhiteSpace(builder.Configuration["spring:cloud:config:uri"]);
 
         if (shouldUse)
@@ -179,8 +202,6 @@ public static class Extensions
 
     public static WebApplication MapDefaultEndpoints(this WebApplication app)
     {
-        app.MapOpenApi();
-
         // Adding health checks endpoints to applications in non-development environments has security implications.
         // See https://aka.ms/dotnet/aspire/healthchecks for details before enabling these endpoints in non-development environments.
 

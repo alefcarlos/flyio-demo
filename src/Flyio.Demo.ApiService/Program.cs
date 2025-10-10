@@ -1,4 +1,6 @@
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args)
+    .AsWebApi()
+    ;
 
 // Add service defaults & Aspire client integrations.
 builder.AddServiceDefaults();
@@ -8,6 +10,8 @@ var app = builder.Build();
 app.UseHttpLogging();
 
 app.UseProblemDetailsWithDefaults();
+
+app.MapOpenApi();
 
 string[] summaries = ["Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"];
 
