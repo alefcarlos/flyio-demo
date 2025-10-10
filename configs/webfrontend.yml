@@ -1,0 +1,4 @@
+Bar: Foo
+Services:
+  apiservice:
+    http: http://apiservice.internal:8080
