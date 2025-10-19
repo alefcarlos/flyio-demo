@@ -1,9 +1,24 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.HttpLogging;
+
 var builder = WebApplication.CreateBuilder(args)
-    .AsWebApi()
+    .AddDefaults()
+    .AddWebApiDefaults()
     ;
 
 // Add service defaults & Aspire client integrations.
 builder.AddServiceDefaults();
+
+builder.Services.Configure<HttpLoggingOptions>(options =>
+{
+    options.RequestHeaders.Add("Authorization");
+    options.ResponseHeaders.Add("WWW-Authenticate");
+});
+
+
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication()
+    .AddJwtBearer();
 
 var app = builder.Build();
 
@@ -34,7 +49,16 @@ app.MapGet("/setting", (IConfiguration configuration, string key) =>
     return configuration[key];
 });
 
-app.MapDefaultEndpoints();
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapGet("/authenticated-ping", [Authorize] () =>
+{
+    return "pong";
+})
+;
+
+app.MapHealthChecksEndpointWithDefaults();
 
 await app.RunAsync();
 

@@ -2,7 +2,7 @@ using Flyio.Demo.Web;
 using Flyio.Demo.Web.Components;
 
 var builder = WebApplication.CreateBuilder(args)
-    .AsBlazor()
+    .AddDefaults()
     ;
 
 // Add service defaults & Aspire client integrations.
@@ -30,8 +30,6 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
-
 app.UseAntiforgery();
 
 app.UseOutputCache();
@@ -41,6 +39,6 @@ app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
-app.MapDefaultEndpoints();
+app.MapHealthChecksEndpointWithDefaults();
 
 app.Run();

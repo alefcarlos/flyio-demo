@@ -8,12 +8,15 @@
     <GlobalPackageReference Include="MinVer" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <PackageVersion Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.10" />
     <PackageVersion Include="Steeltoe.Configuration.ConfigServer" Version="4.0.0" />
     <PackageVersion Include="Steeltoe.Configuration.Placeholder" Version="4.0.0" />
   </ItemGroup>
   <!-- Aspire -->
   <ItemGroup>
     <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.5.1" />
+    <PackageVersion Include="Aspire.Hosting.Keycloak" Version="9.4.0-preview.1.25378.8" />
   </ItemGroup>
   <!-- Microsoft -->
   <ItemGroup>
